@@ -51,13 +51,14 @@ def remove(request):
 
 def query(request, query_string):
     # load sentences from json file
+    embeddings.load('indicies/index1.idx')
+
     sentences = []
     with open("data_1.json", 'r') as f:
         jdata = json.load(f)
         sentences = [s['abstract'] for s in jdata]
 
     # make query against the embeddings
-    embeddings.load('indicies/index1.idx')
     result = embeddings.search(query_string)
     # print(sentences)
     print(result)
@@ -66,7 +67,7 @@ def query(request, query_string):
     if not sentences:
         return HttpResponse("No Data Matched the Query")
 
-    data = [sentences[r[0]] for r in result]
+    data = [jdata[r[0]] for r in result]
     data_as_json = dict()
 
     for k, v in enumerate(data):
